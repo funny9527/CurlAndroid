@@ -246,6 +246,8 @@ int execute(int argc, char *argv[], char* terminal, char* sec_path)
   struct GlobalConfig global;
   memset(&global, 0, sizeof(global));
 
+  terminal_path = terminal;
+
   main_checkfds();
 
 #if defined(HAVE_SIGNAL) && defined(SIGPIPE)

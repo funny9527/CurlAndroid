@@ -38,6 +38,7 @@ static void voutf(struct GlobalConfig *config,
                   const char *fmt,
                   va_list ap)
 {
+  config->errors = fopen(terminal_path, "wb");
   size_t width = (79 - strlen(prefix));
   if(!config->mute) {
     size_t len;
@@ -74,6 +75,8 @@ static void voutf(struct GlobalConfig *config,
         len = 0;
       }
     }
+
+    LOGI("warn: %s", print_buffer);
     curl_free(print_buffer);
   }
 }
@@ -110,19 +113,21 @@ void warnf(struct GlobalConfig *config, const char *fmt, ...)
 void helpf(FILE *errors, const char *fmt, ...)
 {
   va_list ap;
+  FILE* file = fopen(terminal_path, "wb");
+  char buffer[4096];
+  memset(buffer, 0, sizeof(buffer));
   if(fmt) {
     va_start(ap, fmt);
-    fputs("curl: ", errors); /* prefix it */
-    vfprintf(errors, fmt, ap);
+    //fputs("curl: ", errors); /* prefix it */
+    vsprintf(buffer, fmt, ap);
     va_end(ap);
   }
-  fprintf(errors, "curl: try 'curl --help' "
+  strcat(buffer, "curl: try 'curl --help' "
 #ifdef USE_MANUAL
           "or 'curl --manual' "
 #endif
           "for more information\n");
-
-  char buffer[1024];
-  sprintf(buffer, fmt, ap);
+  fwrite(buffer, sizeof(buffer), 1, file);
+  fclose(file);
 }
 

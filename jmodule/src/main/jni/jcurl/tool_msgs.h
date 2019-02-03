@@ -23,6 +23,8 @@
  ***************************************************************************/
 #include "tool_setup.h"
 
+char* terminal_path;
+
 void warnf(struct GlobalConfig *config, const char *fmt, ...);
 void notef(struct GlobalConfig *config, const char *fmt, ...);
 
