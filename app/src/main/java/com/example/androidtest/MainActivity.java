@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class MainActivity extends Activity {
 
-    private static final String CMD = "curl https://news.baidu.com/";
+    private static final String CMD = "curl -o 1.txt https://news.baidu.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

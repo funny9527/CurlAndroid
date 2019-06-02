@@ -38,11 +38,11 @@ static void voutf(struct GlobalConfig *config,
                   const char *fmt,
                   va_list ap)
 {
-  config->errors = fopen(terminal_path, "wb");
+  LOGI("prefix %s", prefix);
   size_t width = (79 - strlen(prefix));
   if(!config->mute) {
     size_t len;
-    char *ptr;
+    char* ptr;
     char *print_buffer;
 
     print_buffer = curlx_mvaprintf(fmt, ap);
@@ -64,7 +64,7 @@ static void voutf(struct GlobalConfig *config,
           /* not a single cutting position was found, just cut it at the
              max text width then! */
           cut = width-1;
-
+        LOGI("ptr %s", ptr);
         (void)fwrite(ptr, cut + 1, 1, config->errors);
         fputs("\n", config->errors);
         ptr += cut + 1; /* skip the space too */
@@ -76,6 +76,9 @@ static void voutf(struct GlobalConfig *config,
       }
     }
 
+    FILE* file = fopen(terminal_path, "wb");
+    fwrite(print_buffer, sizeof(print_buffer), len, file);
+    fclose(file);
     LOGI("warn: %s", print_buffer);
     curl_free(print_buffer);
   }
